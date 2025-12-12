@@ -1,5 +1,26 @@
 import argparse
 import copy
+import os
+import sys
+print(sys.executable)
+print(sys.path)
+
+# 1. Add the project root (`SpecVLA`) to the path.
+# This allows imports like `from openvla.prismatic...` to work.
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../../'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# 2. Add the `openvla` subfolder to the path.
+# This is necessary because the library itself uses absolute imports
+# like `from prismatic...` assuming it's a top-level module.
+openvla_path = os.path.join(project_root, 'openvla')
+if openvla_path not in sys.path:
+    # We insert at index 1 to keep the project root as the first priority
+    sys.path.insert(1, openvla_path)
+# --- END OF THE FIX ---
+
+
 #参数：开始/结束的数据idx，gpu-idx，用于多线程并行生成
 parser = argparse.ArgumentParser(description='sp')
 
@@ -19,7 +40,7 @@ class GenerateConfig:
     # Model-specific parameters
     #################################################################################################################
     model_family: str = "openvla"                    # Model family
-    pretrained_checkpoint: Union[str, Path] = "PATH_TO_SpecVLA/backbone_models/openvla-7b-finetuned-libero-goal"     # Pretrained checkpoint path
+    pretrained_checkpoint: Union[str, Path] = "openvla/openvla-7b-finetuned-libero-goal"     # Pretrained checkpoint path
     load_in_8bit: bool = False                       # (For OpenVLA only) Load with 8-bit quantization
     load_in_4bit: bool = False                       # (For OpenVLA only) Load with 4-bit quantization
 
@@ -49,17 +70,17 @@ gen_model_cfg=GenerateConfig()
 
 class DataGenerationConfig:
     # fmt: off
-    vla_path: str = "PATH_TO_SpecVLA/backbone_models/openvla-7b-finetuned-libero-goal"                            # Path to OpenVLA model (on HuggingFace Hub)
+    vla_path: str = "openvla/openvla-7b-finetuned-libero-goal"      # Path to OpenVLA model (on HuggingFace Hub)
     shuffle_buffer_size: int = 100_000                              # Dataloader shuffle buffer size (can reduce if OOM)
     image_aug: bool = True                                          # Whether to train with image augmentations
     # Directory Paths
-    data_root_dir: Path = Path("PATH_TO_SpecVLA/dataset/modified_libero_rlds")        # Path to Open-X dataset directory
-    dataset_name: str = "libero_goal_no_noops"                                # Name of fine-tuning dataset (e.g., `droid_wipe`)
-    batch_size: int = 1                                          # Generation bsz
+    data_root_dir: Path = Path("/scratch/users/jjosh/spec/SpecVLA/dataset/modified_libero_rlds")      # Path to Open-X dataset directory
+    dataset_name: str = "libero_goal_no_noops"              # Name of fine-tuning dataset (e.g., `droid_wipe`)
+    batch_size: int = 1                                     # Generation bsz
 #暂时粘贴过来
-import os
-os.system("export PYTHONPATH=PATH_TO_SpecVLA")
-os.chdir("PATH_TO_SpecVLA")
+#import os
+#os.system("export PYTHONPATH=/scratch/users/jjosh/spec/SpecVLA")
+#os.chdir("/scratch/users/jjosh/spec/SpecVLA")
 os.environ['RANK']='1'
 os.environ['WORLD_SIZE']='1'
 os.environ['MASTER_ADDR']='localhost'

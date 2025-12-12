@@ -18,18 +18,25 @@ if openvla_path not in sys.path:
     # We insert at index 1 to keep the project root as the first priority
     sys.path.insert(1, openvla_path)
 print(sys.path)
+from torch import nn
+from torch.utils.data import Dataset, DataLoader
+from typing import Any, Dict, List
+from accelerate import Accelerator
+from accelerate.utils import set_seed
+import torch
+from openvla.specdecoding.model.mamba import MambaDraftModel, MambaConfig
 
-parser = argparse.ArgumentParser(description='My training script.')
-parser.add_argument('--local_rank', type=int, default=1,
-                    help='local rank passed from distributed launcher')
-#parser.add_argument("--deepspeed_config", type=str, default='/mnt/public/wangsongsheng/home/Projects/20250223-OpenVLA/openvla/specdecoding/scripts/llama_2_chat_7B_config.json',help="accellerate config path")
-# Include DeepSpeed configuration arguments
+# Argument parsing
+parser = argparse.ArgumentParser(description='Mamba training script.')
+parser.add_argument('--local_rank', type=int, default=1, help='local rank passed from distributed launcher')
 parser = deepspeed.add_config_arguments(parser)
 cmd_args = parser.parse_args()
-#os.chdir("/mnt/public/wangsongsheng/home/Projects/20250223-OpenVLA")
+
+# Configuration
 basepath="/scratch/users/jjosh/spec/SpecVLA/backbone_models/openvla-7b-finetuned-libero-goal"
-cpdir="ckpt_libero_goal_ckpt"
+cpdir="ckpt_libero_goal_mamba_bf_h200_ckpt"
 tmpdir="/scratch/users/jjosh/spec/SpecVLA/dataset/libero_goal_dataset"
+
 train_config = {
     "lr": 5e-5,
     "bs": 4,
@@ -51,61 +58,40 @@ train_config = {
     "std": 0.2,
     "residual": "true,norm",
     "max_len": 2048,
-    "config_path": "/scratch/users/jjosh/spec/SpecVLA/openvla/specdecoding/train-scripts/llama_2_chat_7B_config.json",  #"llama_2_chat_7B_config.json",
     "b1": 0.9,
     "b2": 0.95,
     "grad_clip": 0.5,
+    # Mamba specific
+    "d_model": 4096,
+    "n_layer": 2,
+    "d_state": 16,
+    "expand": 2
 }
-from safetensors import safe_open
-import os
-# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
-import torch
 
+# Setup
 torch.backends.cuda.matmul.allow_tf32 = True
-from accelerate import Accelerator
-from accelerate.utils import set_seed
-
 set_seed(0)
-accelerator = Accelerator(mixed_precision="fp16")
-from openvla.specdecoding.model.cnets import MMModel
-#from configs import EConfig
-from typing import Any, Dict, List
+accelerator = Accelerator(mixed_precision="bf16")
 
-from torch import nn, optim
-from torch.utils.data import Dataset, DataLoader
-from tqdm import tqdm
-import numpy as np
-os.environ['MASTER_ADDR']='localhost'
-os.environ['MASTER_PORT']='14756'
-os.environ['WANDB_MODE']='offline'
+os.environ['MASTER_ADDR'] = 'localhost'
+os.environ['MASTER_PORT'] = '14756'
+os.environ['WANDB_MODE'] = 'offline'
 deepspeed.init_distributed()
 rank = torch.distributed.get_rank()
+
 if rank == 0:
-    import wandb
+    wandb.init(project="OpenVLA-Mamba", entity="ss_wang", config=train_config)
 
-    wandb.init(project="OpenVLA", entity="ss_wang", config=train_config)
-
-from typing import Optional, Union
-from pathlib import Path
-'''from experiments.robot.robot_utils import (
-    DATE_TIME,
-    get_action,
-    get_image_resize_size,
-    get_model,
-    invert_gripper_action,
-    normalize_gripper_action,
-    set_seed_everywhere,
-)'''
-from pathlib import Path
-from typing import Optional
+# Model Loading
+# We need to load the VLA model to get the head weights, similar to original script
 from transformers import AutoModelForVision2Seq
 from openvla.prismatic.extern.hf.configuration_prismatic import OpenVLAConfig
 from openvla.prismatic.extern.hf.modeling_prismatic import OpenVLAForActionPrediction
+
 class FinetuneConfig:
-    # fmt: off
-    vla_path: str = "openvla/openvla-7b-finetuned-libero-goal"       # Path to OpenVLA model (on HuggingFace Hub)
-# cfg=parser.parse_args()
-cfg=FinetuneConfig()
+    vla_path: str = "openvla/openvla-7b-finetuned-libero-goal"
+
+cfg = FinetuneConfig()
 AutoModelForVision2Seq.register(OpenVLAConfig, OpenVLAForActionPrediction)
 vla = AutoModelForVision2Seq.from_pretrained(
     cfg.vla_path,
@@ -117,12 +103,18 @@ vla = AutoModelForVision2Seq.from_pretrained(
 
 lm = vla.language_model
 vla_lm_head = lm.lm_head
-vocab_size,hidden_dim=vla_lm_head.out_features,vla_lm_head.in_features
+vocab_size, hidden_dim = vla_lm_head.out_features, vla_lm_head.in_features
 tensor = vla_lm_head.weight.data
 
+# Head for training (frozen)
 head = torch.nn.Linear(tensor.shape[1], tensor.shape[0], bias=False)
 head.weight.data = tensor
 
+#second iter
+#for param in head.parameters():
+ #   param.requires_grad = False
+
+# Dataset Definitions (Copied from original script)
 def list_files(path):
     datapath = []
     for root, directories, files in os.walk(path, followlinks=True):
@@ -143,7 +135,6 @@ class AddGaussianNoise:
         data["hidden_state_big"] = noisy_tensor
         return data
 
-
 class AddUniformNoise:
     def __init__(self, std=0.0):
         self.std = std
@@ -155,7 +146,6 @@ class AddUniformNoise:
         data["hidden_state_big"] = noisy_tensor
         return data
 
-
 class CustomDataset(Dataset):
     def __init__(self, datapath, transform=None):
         self.data = datapath
@@ -165,7 +155,6 @@ class CustomDataset(Dataset):
         return len(self.data)
 
     def __getitem__(self, index):
-        # try:
         data = torch.load(self.data[index])
         new_data = {}
         hidden_state = torch.cat([item for item in data['hidden_state'][1]],dim=0)
@@ -193,37 +182,25 @@ class CustomDataset(Dataset):
         new_data["input_ids"] = input_ids_target
         new_data['pixel_values'] = pixel_values
 
-
         if self.transform:
             new_data = self.transform(new_data)
 
         return new_data
 
-
 class DataCollatorWithPadding:
-
-    def paddingtensor(self, intensors, N):
-        B, n, S = intensors.shape
-        padding_tensor = torch.zeros(B, N - n, S)
-        outtensors = torch.cat((intensors, padding_tensor), dim=1)
-        return outtensors
-
-    def paddingtensor2D(self, intensors, N):
-        n, d = intensors.shape
-        padding_tensor = torch.zeros(N - n, d, dtype=intensors.dtype)
-        outtensors = torch.cat((intensors, padding_tensor), dim=0)
-        return outtensors
     def paddingtensor1D(self, intensors, N):
         n = intensors.shape[0]
         if N>n:
             padding_tensor = torch.zeros(N - n, dtype=intensors.dtype)
             outtensors = torch.cat((intensors, padding_tensor), dim=0)
             return outtensors
-        elif N < n:
-            print('error!!!',N,n)
-            return intensors
-        else:
-            return intensors
+        return intensors
+
+    def paddingtensor2D(self, intensors, N):
+        n, d = intensors.shape
+        padding_tensor = torch.zeros(N - n, d, dtype=intensors.dtype)
+        outtensors = torch.cat((intensors, padding_tensor), dim=0)
+        return outtensors
 
     def __call__(self, features: List[Dict[str, Any]]) -> Dict[str, Any]:
         max_length = max([item['hidden_state_big'].shape[0] for item in features])
@@ -246,40 +223,58 @@ class DataCollatorWithPadding:
         }
         return batch
 
-
 def top_accuracy(output, target, topk=(1,)):
-    # output.shape (bs, num_classes), target.shape (bs, )
-    """Computes the accuracy over the k top predictions for the specified values of k"""
     with torch.no_grad():
         maxk = max(topk)
         batch_size = target.size(0)
-
         _, pred = output.topk(maxk, 1, True, True)
         pred = pred.t()
         correct = pred.eq(target.view(1, -1).expand_as(pred))
-
         res = []
         for k in topk:
             correct_k = correct[:k].reshape(-1).float().sum(0, keepdim=True)
             res.append(correct_k)
         return res
-def list_files(path):
-    datapath = []
-    for root, directories, files in os.walk(path, followlinks=True):
-        for file in files:
-            file_path = os.path.join(root, file)
-            datapath.append(file_path)
-    return datapath
+
+#def compute_loss(target, target_p, predict, loss_mask):
+#    out_head = head_engine(predict)
+#    out_logp = nn.LogSoftmax(dim=2)(out_head)
+#    plogp = target_p * out_logp
+#    ploss = -torch.sum(torch.sum(loss_mask * plogp, 2)) / (loss_mask.shape[0] * loss_mask.shape[1])
+#    vloss = criterion(predict, target.to(rank))
+#    vloss = torch.sum(torch.mean(loss_mask * vloss, 2)) / (loss_mask.shape[0] * loss_mask.shape[1])
+#    return vloss, ploss, out_head
 
 def compute_loss(target, target_p, predict, loss_mask):
-    out_head = head_engine(predict)
-    out_logp = nn.LogSoftmax(dim=2)(out_head)
-    plogp = target_p * out_logp
-    ploss = -torch.sum(torch.sum(loss_mask * plogp, 2)) / (loss_mask.shape[0] * loss_mask.shape[1])
-    vloss = criterion(predict, target.to(rank))
-    vloss = torch.sum(torch.mean(loss_mask * vloss, 2)) / (loss_mask.shape[0] * loss_mask.shape[1])
+   
+    # cast inputs to Float32. 
+    predict_f32 = predict.float()
+    target_f32 = target.to(rank).float()
+    
+    # calculate SmoothL1 in Float32
+    vloss = criterion(predict_f32, target_f32)
+    vloss = torch.sum(torch.mean(loss_mask * vloss, 2)) / (loss_mask.shape[0] * loss_mask.shape[1] + 1e-6)
+
+    # head/classification Loss in Float32 as well
+    out_head = head_engine(predict) # leave for now
+    out_head_f32 = out_head.float() # Cast output to float for stable logsoftmax
+    
+    # Cast target probability to float
+    target_p_f32 = target_p.float()
+
+    out_logp = nn.LogSoftmax(dim=2)(out_head_f32)
+    plogp = target_p_f32 * out_logp
+    
+    # Safety clamp to prevent NaN propagation if logp explodes
+    if torch.isnan(plogp).any():
+        plogp = torch.nan_to_num(plogp, nan=0.0)
+
+    ploss = -torch.sum(torch.sum(loss_mask * plogp, 2)) / (loss_mask.shape[0] * loss_mask.shape[1] + 1e-6)
+    
+    # Return original out_head so accuracy calculation remains valid
     return vloss, ploss, out_head
 
+# Data Loading
 if train_config["data_noise"]:
     if train_config["noise"] == "uniform":
         aug = AddUniformNoise(std=train_config["std"])
@@ -290,32 +285,29 @@ else:
 
 datapath = list_files(train_config["datapath"])
 print(f"train config index is {train_config['datapath']}")
-#print(f"datapath is {datapath}")
-
 traindatapath = datapath[:int(len(datapath) * 0.95)]
 testdatapath = datapath[int(len(datapath) * 0.95):]
 traindataset = CustomDataset(traindatapath, transform=aug)
 testdataset = CustomDataset(testdatapath)
-test_loader = DataLoader(testdataset, batch_size=train_config["bs"], shuffle=False,
-                         collate_fn=DataCollatorWithPadding(), num_workers=train_config["num_workers"], pin_memory=True)
 
-from openvla.specdecoding.model.configs import EConfig
-from openvla.specdecoding.model.cnets import MMModel
-
+# Mamba Initialization
 if rank == 0:
     if not os.path.exists(cpdir):
         os.makedirs(cpdir)
 
-config = EConfig.from_pretrained(train_config["config_path"])
+mamba_config = MambaConfig(
+    d_model=train_config["d_model"],
+    n_layer=train_config["n_layer"],
+    vocab_size=vocab_size,
+    d_state=train_config["d_state"],
+    expand=train_config["expand"]
+)
 
-model = MMModel(config, path=basepath, load_emb=True)
+model = MambaDraftModel(mamba_config, path=basepath, load_emb=True)
 
 criterion = nn.SmoothL1Loss(reduction="none")
 
 num_epochs = train_config["num_epochs"]
-num_warmup_steps = train_config["num_warmup_steps"]
-total_steps = train_config["total_steps"]
-is_warmup = train_config["is_warmup"]
 model_engine, optimizer, train_loader, _ = deepspeed.initialize(args=cmd_args,
                                                                 model=model,
                                                                 model_parameters=model.parameters(),
@@ -329,8 +321,10 @@ head_engine, _, test_loader, _ = deepspeed.initialize(args=cmd_args,
                                                       training_data=testdataset,
                                                       collate_fn=DataCollatorWithPadding()
                                                       )
+# second ag
 for param in head.parameters():
     param.requires_grad = False
+
 print('start training')
 for epoch in range(num_epochs):
     top_3acc = [0 for _ in range(3)]
@@ -341,17 +335,23 @@ for epoch in range(num_epochs):
     model.train()
     for batch_idx, data in enumerate(train_loader):
         model.zero_grad()
-        predict = model_engine(data["hidden_states"].to(rank), input_ids=data["input_ids"].to(rank),input_embeddings=data['embedding_states'].to(rank),
-                               attention_mask=data["attention_mask"].to(rank))
+        # Mamba forward
+        predict, _ = model_engine(
+            hidden_states=data["hidden_states"].to(device=rank, dtype=torch.bfloat16), 
+            input_ids=data["input_ids"].to(rank),
+            input_embeddings=data['embedding_states'].to(device=rank, dtype=torch.bfloat16),
+            attention_mask=data["attention_mask"].to(rank)
+        )
+        
         with torch.no_grad():
-            target_head = head_engine(data["target"].to(rank))
+            target_head = head_engine(data["target"].to(device=rank, dtype=torch.bfloat16))
             target_p = nn.Softmax(dim=2)(target_head)
             target_p = target_p.detach()
+        
         loss_mask = data["loss_mask"][:, :, None].to(rank)
         vloss, ploss, out_head = compute_loss(data["target"], target_p, predict, loss_mask)
         loss = train_config["v_w"] * vloss + train_config["p_w"] * ploss
         model_engine.backward(loss)
-
         model_engine.step()
 
         with torch.no_grad():
@@ -366,6 +366,7 @@ for epoch in range(num_epochs):
                 top_3acc[top_i] += topkacc[top_i]
             total += ct
             correct += cc
+            
         if rank == 0 and ct != 0:
             logdict = {"train/lr": optimizer.optimizer.param_groups[0]["lr"], "train/vloss": vloss.item(),
                        "train/ploss": ploss.item(), "train/loss": loss.item(), "train/acc": cc / ct}
@@ -382,10 +383,10 @@ for epoch in range(num_epochs):
     correct, total = correct.sum().item(), total.sum().item()
     epoch_loss /= num_batches
     top_3acc = accelerator.gather_for_metrics(top_3acc)
+    
     if accelerator.is_local_main_process:
         for id, i in enumerate(top_3acc):
             wandb.log({f'train/epochtop_{id + 1}_acc': i.sum().item() / total})
-    if accelerator.is_local_main_process:
         print('Epoch [{}/{}], Loss: {:.4f}'.format(epoch + 1, num_epochs, epoch_loss))
         print('Train Accuracy: {:.2f}%'.format(100 * correct / (total + 1e-5)))
         wandb.log({"train/epochacc": correct / (total + 1e-5), "train/epochloss": epoch_loss})
@@ -394,3 +395,4 @@ for epoch in range(num_epochs):
     if epoch % 10 == 0:
         deepspeed.DeepSpeedEngine.save_checkpoint(model_engine, save_dir=f"{cpdir}/state_{epoch}")
         print(f"checkpoint saved to {cpdir}/state_{epoch}")
+

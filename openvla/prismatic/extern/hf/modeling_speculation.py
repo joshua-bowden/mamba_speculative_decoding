@@ -11,7 +11,9 @@ from transformers.models.llama import LlamaForCausalLM
 from transformers.models.llama.configuration_llama import LlamaConfig
 from torch.nn import BCEWithLogitsLoss, CrossEntropyLoss, MSELoss
 from openvla.specdecoding.model.cnets import MMModel,PMMModel
+from openvla.specdecoding.model.cnets import MMModel,PMMModel
 from openvla.specdecoding.model.cnets import EConfig
+from openvla.specdecoding.model.mamba import MambaDraftModel, MambaConfig
 from transformers import AutoTokenizer
 import os
 from transformers import PreTrainedModel, PretrainedConfig, AutoConfig
@@ -582,9 +584,17 @@ class SpecVLAforActionPrediction(nn.Module):
                 self.ea_layer = PMMModel(config, path=base_model_name_or_path,load_emb=True)
                 ea_layer_state_dict = safetensors.torch.load(safetensors_model)
         else:
-            self.ea_layer = MMModel(config, path=base_model_name_or_path,load_emb=True)
-            load_model_path=os.path.join(ea_model_path, "pytorch_model.bin")
-            ea_layer_state_dict = torch.load(load_model_path)
+            if hasattr(config, 'model_type') and config.model_type == 'mamba':
+                self.ea_layer = MambaDraftModel(config)
+                if os.path.exists(os.path.join(ea_model_path, "model.safetensors")):
+                    from safetensors.torch import load_file
+                    ea_layer_state_dict = load_file(os.path.join(ea_model_path, "model.safetensors"))
+                else:
+                    ea_layer_state_dict = torch.load(os.path.join(ea_model_path, "pytorch_model.bin"))
+            else:
+                self.ea_layer = MMModel(config, path=base_model_name_or_path, load_emb=True)
+                load_model_path = os.path.join(ea_model_path, "pytorch_model.bin")
+                ea_layer_state_dict = torch.load(load_model_path)
         #self.ea_layer.init_tree()
         self.tree_mask = None
         low_memory = False
@@ -687,6 +697,8 @@ class SpecVLAforActionPrediction(nn.Module):
             #print(len(outputs.hidden_states))
             hidden_states = outputs.hidden_states[-1]
             input_embeddings = outputs.hidden_states[0]
+            print(f"DEBUG: hidden_states shape: {hidden_states.shape}")
+            print(f"DEBUG: input_embeddings shape: {input_embeddings.shape}")
             #print(len(hidden_states))
             #print(torch.cat(hidden_states).shape)
             if output_orig:
