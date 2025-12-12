@@ -1,0 +1,62 @@
+/scratch/users/jjosh/spec/3.9venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 3.2.1'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+/scratch/users/jjosh/spec/3.9venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 3.2.1'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+/scratch/users/jjosh/spec/3.9venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 3.2.1'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[W socket.cpp:464] [c10d] The server socket cannot be initialized on [::]:29500 (errno: 97 - Address family not supported by protocol).
+[W socket.cpp:697] [c10d] The client socket cannot be initialized to connect to [localhost]:29500 (errno: 97 - Address family not supported by protocol).
+Detected kernel version 3.10.0, which is below the recommended minimum of 5.5.0; this can cause the process to hang. It is recommended to upgrade the kernel to the minimum version or higher.
+/scratch/users/jjosh/spec/3.9venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 3.2.1'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+wandb: Tracking run with wandb version 0.13.1
+wandb: W&B syncing is set to `offline` in this directory.  
+wandb: Run `wandb online` or set WANDB_MODE=online to enable cloud syncing.
+2025-12-03 02:04:10.707722: I tensorflow/core/util/port.cc:113] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2025-12-03 02:04:11.668954: E external/local_xla/xla/stream_executor/cuda/cuda_dnn.cc:9261] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2025-12-03 02:04:11.670402: E external/local_xla/xla/stream_executor/cuda/cuda_fft.cc:607] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2025-12-03 02:04:11.816982: E external/local_xla/xla/stream_executor/cuda/cuda_blas.cc:1515] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2025-12-03 02:04:12.213069: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX512F AVX512_VNNI AVX512_BF16 AVX_VNNI AMX_TILE AMX_INT8 AMX_BF16 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2025-12-03 02:04:16.796256: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+2025-12-03 02:04:23.524847: W tensorflow/core/common_runtime/gpu/gpu_device.cc:2348] TensorFlow was not built with CUDA kernel binaries compatible with compute capability 9.0. CUDA kernels will be jit-compiled from PTX, which could take 30 minutes or longer.
+Downloading shards:   0%|          | 0/4 [00:00<?, ?it/s]Downloading shards:  25%|██▌       | 1/4 [00:46<02:19, 46.47s/it]Downloading shards:  50%|█████     | 2/4 [01:32<01:32, 46.03s/it]Downloading shards:  75%|███████▌  | 3/4 [02:15<00:44, 44.91s/it]Downloading shards: 100%|██████████| 4/4 [02:19<00:00, 28.70s/it]Downloading shards: 100%|██████████| 4/4 [02:19<00:00, 34.90s/it]
+Loading checkpoint shards:   0%|          | 0/4 [00:00<?, ?it/s]Loading checkpoint shards:  25%|██▌       | 1/4 [00:00<00:00,  3.57it/s]Loading checkpoint shards:  50%|█████     | 2/4 [00:00<00:00,  4.33it/s]Loading checkpoint shards:  75%|███████▌  | 3/4 [00:00<00:00,  4.65it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00,  4.88it/s]Loading checkpoint shards: 100%|██████████| 4/4 [00:00<00:00,  4.64it/s]
+/scratch/users/jjosh/spec/3.9venv/lib/python3.9/site-packages/torch/utils/checkpoint.py:460: UserWarning: torch.utils.checkpoint: please pass in use_reentrant=True or use_reentrant=False explicitly. The default value of use_reentrant will be updated to be False in the future. To maintain current behavior, pass use_reentrant=True. It is recommended that you use use_reentrant=False. Refer to docs for more details on the differences between the two variants.
+  warnings.warn(
+wandb: Waiting for W&B process to finish... (success).
+wandb: - 0.000 MB of 0.000 MB uploaded (0.000 MB deduped)wandb: \ 0.000 MB of 0.000 MB uploaded (0.000 MB deduped)wandb: | 0.000 MB of 0.000 MB uploaded (0.000 MB deduped)wandb:                                                                                
+wandb: 
+wandb: Run history:
+wandb:            train/acc ▁▁▇▃▅▄▃▃▇▅▅▃▃▄▅▄▄▇▆▂▆▆▄▆██▆█▇▇▇▇▇██▇████
+wandb:       train/epochacc ▁▄▅▅▅▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆▆▆▇█████████████████
+wandb:      train/epochloss █▆▅▅▅▄▄▄▄▃▃▃▃▂▂▂▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb: train/epochtop_1_acc ▁▄▅▅▅▅▅▅▅▅▅▅▆▆▆▆▆▆▆▆▆▆▇█████████████████
+wandb: train/epochtop_2_acc ▁▅▆▆▆▆▆▆▆▆▇▇▇▇▇▇▇▇▇▇▇▇██████████████████
+wandb: train/epochtop_3_acc ▁▅▆▆▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇▇████████████████████
+wandb:           train/loss █▇▆▆▆▅▅▄▄▄▅▄▄▄▄▄▄▃▂▃▃▃▂▂▂▂▃▁▂▂▃▂▃▃▁▂▃▁▁▃
+wandb:             train/lr ██▇▇▇▇▆▆▆▅▅▅▄▄▄▃▃▃▃▂▂▂▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁▁
+wandb:          train/ploss █▆▄▇▅▆▅▆▅▃▆▄▄▃▄▅▅▃▃▅▃▃▂▁▂▂▃▂▂▂▃▃▃▃▁▁▃▂▁▂
+wandb:      train/top_1_acc ▁▁▇▃▅▄▃▃▇▅▅▃▃▄▅▄▄▇▆▂▆▆▄▆██▆█▇▇▇▇▇██▇████
+wandb:      train/top_2_acc ▁▃█▆▅▃▆▅██▅▆▅█▆▃▅█▆▆████████████████████
+wandb:      train/top_3_acc ▁▅██▅▆▆▆██▅▆▅█▆▃▆█▆█████████████████████
+wandb:          train/vloss █▇▆▆▆▅▅▄▄▄▄▄▄▄▄▄▄▃▂▃▃▃▂▂▂▂▃▁▂▂▃▂▃▃▁▂▃▁▁▃
+wandb: 
+wandb: Run summary:
+wandb:            train/acc 1.0
+wandb:       train/epochacc 0.97634
+wandb:      train/epochloss 0.01232
+wandb: train/epochtop_1_acc 0.97617
+wandb: train/epochtop_2_acc 0.99844
+wandb: train/epochtop_3_acc 0.99985
+wandb:           train/loss 0.00934
+wandb:             train/lr 0.0
+wandb:          train/ploss 0.01233
+wandb:      train/top_1_acc 1.0
+wandb:      train/top_2_acc 1.0
+wandb:      train/top_3_acc 1.0
+wandb:          train/vloss 0.00811
+wandb: 
+wandb: You can sync this run to the cloud by running:
+wandb: wandb sync /scratch/users/jjosh/spec/wandb/offline-run-20251203_020401-1i6dcezc
+wandb: Find logs at: ./wandb/offline-run-20251203_020401-1i6dcezc/logs

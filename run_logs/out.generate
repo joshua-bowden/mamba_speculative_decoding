@@ -1,0 +1,106 @@
+GPU 0: NVIDIA H200 (UUID: GPU-950c709f-3069-3e1d-c1ac-58b34ce98ebd)
+/share/software/user/open/python/3.9.0/bin/python3
+['/scratch/users/jjosh/spec/SpecVLA/openvla/specdecoding/train-scripts', '/share/software/user/open/python/3.9.0/lib/python39.zip', '/share/software/user/open/python/3.9.0/lib/python3.9', '/share/software/user/open/python/3.9.0/lib/python3.9/lib-dynload', '/home/users/jjosh/.local/lib/python3.9/site-packages', '__editable__.openvla-0.0.3.finder.__path_hook__', '/share/software/user/open/python/3.9.0/lib/python3.9/site-packages']
+loading vla
+[*] Instantiating Pretrained VLA model
+[*] Loading in BF16 with Flash-Attention Enabled
+[*] 使用本地OpenVLAForActionPrediction类并从预训练检查点加载
+WARNING: No local dataset_statistics.json file found for current checkpoint.
+You can ignore this if you are loading the base VLA (i.e. not fine-tuned) checkpoint.Otherwise, you may run into errors when trying to call `predict_action()` due to an absent `unnorm_key`.
+Loaded model: <class 'openvla.prismatic.extern.hf.modeling_prismatic.OpenVLAForActionPrediction'>
+loading data
+11/03 [02:20:53] INFO     | >> Load dataset info from        dataset_info.py:599
+                          /scratch/users/jjosh/spec/SpecVLA/                    
+                          dataset/modified_libero_rlds/liber                    
+                          o_goal_no_noops/1.0.0                                 
+                 INFO     | >> Constructing tf.data.Dataset logging_logger.py:49
+                          libero_goal for split all, from                       
+                          /scratch/users/jjosh/spec/SpecVLA                     
+                          /dataset/modified_libero_rlds/lib                     
+                          ero_goal_no_noops/1.0.0                               
+11/03 [02:20:54] INFO     | >> [*] Computing dataset           data_utils.py:232
+                          statistics. This may take a bit, but                  
+                          should only need to happen once.                      
+11/03 [02:20:55] INFO     | >> Constructing tf.data.Dataset logging_logger.py:49
+                          libero_goal for split                                 
+                          train[:95%], from                                     
+                          /scratch/users/jjosh/spec/SpecVLA                     
+                          /dataset/modified_libero_rlds/lib                     
+                          ero_goal_no_noops/1.0.0                               
+
+######################################################################################
+# Loading the following 1 datasets (incl. sampling weight):                         #
+# libero_goal_no_noops: ====================================================1.000000 #
+######################################################################################
+
+                 INFO     | >> [*] Threads per Dataset: [1]       dataset.py:531
+                 INFO     | >> [*] Reads per Dataset: [1]         dataset.py:532
+                 INFO     | >> [*] Constructing datasets...       dataset.py:535
+                 INFO     | >> Load dataset info from        dataset_info.py:599
+                          /scratch/users/jjosh/spec/SpecVLA/                    
+                          dataset/modified_libero_rlds/liber                    
+                          o_goal_no_noops/1.0.0                                 
+                 INFO     | >> Constructing tf.data.Dataset logging_logger.py:49
+                          libero_goal for split                                 
+                          train[:95%], from                                     
+                          /scratch/users/jjosh/spec/SpecVLA                     
+                          /dataset/modified_libero_rlds/lib                     
+                          ero_goal_no_noops/1.0.0                               
+11/03 [02:20:56] INFO     | >> [*] Applying frame transforms on   dataset.py:575
+                          dataset...                                            
+start enumerating
+1000
+2000
+3000
+4000
+5000
+6000
+7000
+8000
+9000
+10000
+11000
+12000
+13000
+14000
+15000
+16000
+17000
+18000
+19000
+20000
+21000
+22000
+23000
+24000
+25000
+26000
+27000
+28000
+29000
+30000
+31000
+32000
+33000
+34000
+35000
+36000
+37000
+38000
+39000
+40000
+41000
+42000
+43000
+44000
+45000
+46000
+47000
+48000
+49000
+50000
+51000
+52000
+generation ended
+sample num 52042
+valid sample num 28566

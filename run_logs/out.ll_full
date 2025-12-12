@@ -1,0 +1,439 @@
+GPU 0: NVIDIA H100 80GB HBM3 (UUID: GPU-6e07b4cc-b6ae-ae97-38fb-dad6f8b63f93)
+Warning: The cache directory for DeepSpeed Triton autotune, /home/users/jjosh/.triton/autotune, appears to be on an NFS system. While this is generally acceptable, if you experience slowdowns or hanging when DeepSpeed exits, it is recommended to set the TRITON_CACHE_DIR environment variable to a non-NFS path.
+[2025-12-03 02:03:52,631] [WARNING] [runner.py:232:fetch_hostfile] Unable to find hostfile, will proceed with training with local resources only.
+Detected VISIBLE_DEVICES=0 but ignoring it because one or several of --include/--exclude/--num_gpus/--num_nodes cl args were used. If you want to use CUDA_VISIBLE_DEVICES don't pass any of these arguments to deepspeed.
+[2025-12-03 02:03:52,631] [INFO] [runner.py:630:main] cmd = /scratch/users/jjosh/spec/3.9venv/bin/python3 -u -m deepspeed.launcher.launch --world_info=eyJsb2NhbGhvc3QiOiBbMF19 --master_addr=127.0.0.1 --master_port=29500 --enable_each_rank_log=None --log_level=info SpecVLA/openvla/specdecoding/train-scripts/train_deepspeed_libero_goal.py --deepspeed_config /scratch/users/jjosh/spec/SpecVLA/openvla/specdecoding/train-scripts/ds_config.json
+Warning: The cache directory for DeepSpeed Triton autotune, /home/users/jjosh/.triton/autotune, appears to be on an NFS system. While this is generally acceptable, if you experience slowdowns or hanging when DeepSpeed exits, it is recommended to set the TRITON_CACHE_DIR environment variable to a non-NFS path.
+[2025-12-03 02:03:55,816] [INFO] [launch.py:155:main] 0 __LMOD_STACK_NCCL_HOME=false
+[2025-12-03 02:03:55,816] [INFO] [launch.py:155:main] 0 NCCL_HOME=/share/software/user/open/nccl/2.27.7
+[2025-12-03 02:03:55,816] [INFO] [launch.py:162:main] WORLD INFO DICT: {'localhost': [0]}
+[2025-12-03 02:03:55,816] [INFO] [launch.py:168:main] nnodes=1, num_local_procs=1, node_rank=0
+[2025-12-03 02:03:55,816] [INFO] [launch.py:179:main] global_rank_mapping=defaultdict(<class 'list'>, {'localhost': [0]})
+[2025-12-03 02:03:55,816] [INFO] [launch.py:180:main] dist_world_size=1
+[2025-12-03 02:03:55,816] [INFO] [launch.py:184:main] Setting CUDA_VISIBLE_DEVICES=0
+[2025-12-03 02:03:55,825] [INFO] [launch.py:272:main] process 54941 spawned with command: ['/scratch/users/jjosh/spec/3.9venv/bin/python3', '-u', 'SpecVLA/openvla/specdecoding/train-scripts/train_deepspeed_libero_goal.py', '--local_rank=0', '--deepspeed_config', '/scratch/users/jjosh/spec/SpecVLA/openvla/specdecoding/train-scripts/ds_config.json']
+Warning: The cache directory for DeepSpeed Triton autotune, /home/users/jjosh/.triton/autotune, appears to be on an NFS system. While this is generally acceptable, if you experience slowdowns or hanging when DeepSpeed exits, it is recommended to set the TRITON_CACHE_DIR environment variable to a non-NFS path.
+['/scratch/users/jjosh/spec/SpecVLA', '/scratch/users/jjosh/spec/SpecVLA/openvla', '/scratch/users/jjosh/spec/SpecVLA/openvla/specdecoding/train-scripts', '/SpecVLA', '/share/software/user/open/python/3.9.0/lib/python39.zip', '/share/software/user/open/python/3.9.0/lib/python3.9', '/share/software/user/open/python/3.9.0/lib/python3.9/lib-dynload', '/scratch/users/jjosh/spec/3.9venv/lib/python3.9/site-packages', '/scratch/users/jjosh/spec/LIBERO']
+train config index is /scratch/users/jjosh/spec/SpecVLA/dataset/libero_goal_dataset
+start training
+Epoch [1/200], Loss: 0.0285
+Train Accuracy: 37.20%
+checkpoint saved to ckpt_libero_goal_ckpt/state_0
+Epoch [2/200], Loss: 0.0241
+Train Accuracy: 64.18%
+Epoch [3/200], Loss: 0.0228
+Train Accuracy: 76.01%
+Epoch [4/200], Loss: 0.0223
+Train Accuracy: 75.68%
+Epoch [5/200], Loss: 0.0217
+Train Accuracy: 78.77%
+Epoch [6/200], Loss: 0.0212
+Train Accuracy: 79.25%
+Epoch [7/200], Loss: 0.0209
+Train Accuracy: 80.30%
+Epoch [8/200], Loss: 0.0205
+Train Accuracy: 80.85%
+Epoch [9/200], Loss: 0.0203
+Train Accuracy: 81.62%
+Epoch [10/200], Loss: 0.0200
+Train Accuracy: 81.89%
+Epoch [11/200], Loss: 0.0198
+Train Accuracy: 82.33%
+checkpoint saved to ckpt_libero_goal_ckpt/state_10
+Epoch [12/200], Loss: 0.0196
+Train Accuracy: 82.59%
+Epoch [13/200], Loss: 0.0195
+Train Accuracy: 82.93%
+Epoch [14/200], Loss: 0.0193
+Train Accuracy: 83.20%
+Epoch [15/200], Loss: 0.0192
+Train Accuracy: 83.38%
+Epoch [16/200], Loss: 0.0190
+Train Accuracy: 83.47%
+Epoch [17/200], Loss: 0.0189
+Train Accuracy: 83.86%
+Epoch [18/200], Loss: 0.0188
+Train Accuracy: 83.94%
+Epoch [19/200], Loss: 0.0187
+Train Accuracy: 84.07%
+Epoch [20/200], Loss: 0.0185
+Train Accuracy: 84.16%
+Epoch [21/200], Loss: 0.0184
+Train Accuracy: 84.29%
+checkpoint saved to ckpt_libero_goal_ckpt/state_20
+Epoch [22/200], Loss: 0.0183
+Train Accuracy: 84.32%
+Epoch [23/200], Loss: 0.0182
+Train Accuracy: 84.57%
+Epoch [24/200], Loss: 0.0181
+Train Accuracy: 84.58%
+Epoch [25/200], Loss: 0.0180
+Train Accuracy: 84.84%
+Epoch [26/200], Loss: 0.0179
+Train Accuracy: 84.73%
+Epoch [27/200], Loss: 0.0178
+Train Accuracy: 84.85%
+Epoch [28/200], Loss: 0.0177
+Train Accuracy: 85.02%
+Epoch [29/200], Loss: 0.0176
+Train Accuracy: 84.91%
+Epoch [30/200], Loss: 0.0176
+Train Accuracy: 85.16%
+Epoch [31/200], Loss: 0.0175
+Train Accuracy: 85.20%
+checkpoint saved to ckpt_libero_goal_ckpt/state_30
+Epoch [32/200], Loss: 0.0174
+Train Accuracy: 85.21%
+Epoch [33/200], Loss: 0.0173
+Train Accuracy: 85.20%
+Epoch [34/200], Loss: 0.0172
+Train Accuracy: 85.39%
+Epoch [35/200], Loss: 0.0171
+Train Accuracy: 85.38%
+Epoch [36/200], Loss: 0.0170
+Train Accuracy: 85.33%
+Epoch [37/200], Loss: 0.0170
+Train Accuracy: 85.45%
+Epoch [38/200], Loss: 0.0169
+Train Accuracy: 85.56%
+Epoch [39/200], Loss: 0.0168
+Train Accuracy: 85.76%
+Epoch [40/200], Loss: 0.0167
+Train Accuracy: 85.63%
+Epoch [41/200], Loss: 0.0166
+Train Accuracy: 85.74%
+checkpoint saved to ckpt_libero_goal_ckpt/state_40
+Epoch [42/200], Loss: 0.0165
+Train Accuracy: 85.77%
+Epoch [43/200], Loss: 0.0165
+Train Accuracy: 85.81%
+Epoch [44/200], Loss: 0.0164
+Train Accuracy: 85.81%
+Epoch [45/200], Loss: 0.0163
+Train Accuracy: 85.86%
+Epoch [46/200], Loss: 0.0163
+Train Accuracy: 85.97%
+Epoch [47/200], Loss: 0.0162
+Train Accuracy: 85.94%
+Epoch [48/200], Loss: 0.0161
+Train Accuracy: 85.95%
+Epoch [49/200], Loss: 0.0160
+Train Accuracy: 86.05%
+Epoch [50/200], Loss: 0.0160
+Train Accuracy: 86.04%
+Epoch [51/200], Loss: 0.0159
+Train Accuracy: 86.14%
+checkpoint saved to ckpt_libero_goal_ckpt/state_50
+Epoch [52/200], Loss: 0.0158
+Train Accuracy: 85.98%
+Epoch [53/200], Loss: 0.0158
+Train Accuracy: 86.39%
+Epoch [54/200], Loss: 0.0157
+Train Accuracy: 86.14%
+Epoch [55/200], Loss: 0.0156
+Train Accuracy: 86.30%
+Epoch [56/200], Loss: 0.0156
+Train Accuracy: 86.19%
+Epoch [57/200], Loss: 0.0155
+Train Accuracy: 86.33%
+Epoch [58/200], Loss: 0.0154
+Train Accuracy: 86.34%
+Epoch [59/200], Loss: 0.0154
+Train Accuracy: 86.47%
+Epoch [60/200], Loss: 0.0153
+Train Accuracy: 86.48%
+Epoch [61/200], Loss: 0.0152
+Train Accuracy: 86.50%
+checkpoint saved to ckpt_libero_goal_ckpt/state_60
+Epoch [62/200], Loss: 0.0152
+Train Accuracy: 86.51%
+Epoch [63/200], Loss: 0.0151
+Train Accuracy: 86.56%
+Epoch [64/200], Loss: 0.0150
+Train Accuracy: 86.63%
+Epoch [65/200], Loss: 0.0150
+Train Accuracy: 86.68%
+Epoch [66/200], Loss: 0.0149
+Train Accuracy: 86.58%
+Epoch [67/200], Loss: 0.0149
+Train Accuracy: 86.79%
+Epoch [68/200], Loss: 0.0148
+Train Accuracy: 86.70%
+Epoch [69/200], Loss: 0.0147
+Train Accuracy: 86.74%
+Epoch [70/200], Loss: 0.0147
+Train Accuracy: 86.78%
+Epoch [71/200], Loss: 0.0146
+Train Accuracy: 86.92%
+checkpoint saved to ckpt_libero_goal_ckpt/state_70
+Epoch [72/200], Loss: 0.0146
+Train Accuracy: 86.81%
+Epoch [73/200], Loss: 0.0145
+Train Accuracy: 86.96%
+Epoch [74/200], Loss: 0.0144
+Train Accuracy: 87.02%
+Epoch [75/200], Loss: 0.0144
+Train Accuracy: 87.06%
+Epoch [76/200], Loss: 0.0143
+Train Accuracy: 87.06%
+Epoch [77/200], Loss: 0.0143
+Train Accuracy: 87.13%
+Epoch [78/200], Loss: 0.0142
+Train Accuracy: 87.14%
+Epoch [79/200], Loss: 0.0142
+Train Accuracy: 87.29%
+Epoch [80/200], Loss: 0.0141
+Train Accuracy: 87.37%
+Epoch [81/200], Loss: 0.0140
+Train Accuracy: 87.25%
+checkpoint saved to ckpt_libero_goal_ckpt/state_80
+Epoch [82/200], Loss: 0.0140
+Train Accuracy: 87.41%
+Epoch [83/200], Loss: 0.0139
+Train Accuracy: 87.33%
+Epoch [84/200], Loss: 0.0139
+Train Accuracy: 87.53%
+Epoch [85/200], Loss: 0.0138
+Train Accuracy: 87.49%
+Epoch [86/200], Loss: 0.0138
+Train Accuracy: 87.71%
+Epoch [87/200], Loss: 0.0137
+Train Accuracy: 87.64%
+Epoch [88/200], Loss: 0.0136
+Train Accuracy: 87.85%
+Epoch [89/200], Loss: 0.0136
+Train Accuracy: 87.73%
+Epoch [90/200], Loss: 0.0135
+Train Accuracy: 87.94%
+Epoch [91/200], Loss: 0.0135
+Train Accuracy: 87.96%
+checkpoint saved to ckpt_libero_goal_ckpt/state_90
+Epoch [92/200], Loss: 0.0134
+Train Accuracy: 88.07%
+Epoch [93/200], Loss: 0.0134
+Train Accuracy: 88.23%
+Epoch [94/200], Loss: 0.0133
+Train Accuracy: 88.17%
+Epoch [95/200], Loss: 0.0133
+Train Accuracy: 88.44%
+Epoch [96/200], Loss: 0.0132
+Train Accuracy: 88.34%
+Epoch [97/200], Loss: 0.0132
+Train Accuracy: 88.67%
+Epoch [98/200], Loss: 0.0131
+Train Accuracy: 88.61%
+Epoch [99/200], Loss: 0.0131
+Train Accuracy: 88.78%
+Epoch [100/200], Loss: 0.0130
+Train Accuracy: 88.86%
+Epoch [101/200], Loss: 0.0130
+Train Accuracy: 89.24%
+checkpoint saved to ckpt_libero_goal_ckpt/state_100
+Epoch [102/200], Loss: 0.0129
+Train Accuracy: 89.08%
+Epoch [103/200], Loss: 0.0129
+Train Accuracy: 89.62%
+Epoch [104/200], Loss: 0.0128
+Train Accuracy: 89.41%
+Epoch [105/200], Loss: 0.0128
+Train Accuracy: 89.90%
+Epoch [106/200], Loss: 0.0127
+Train Accuracy: 89.92%
+Epoch [107/200], Loss: 0.0127
+Train Accuracy: 90.41%
+Epoch [108/200], Loss: 0.0126
+Train Accuracy: 90.54%
+Epoch [109/200], Loss: 0.0126
+Train Accuracy: 91.10%
+Epoch [110/200], Loss: 0.0125
+Train Accuracy: 91.21%
+Epoch [111/200], Loss: 0.0125
+Train Accuracy: 91.92%
+checkpoint saved to ckpt_libero_goal_ckpt/state_110
+Epoch [112/200], Loss: 0.0124
+Train Accuracy: 92.36%
+Epoch [113/200], Loss: 0.0124
+Train Accuracy: 93.13%
+Epoch [114/200], Loss: 0.0124
+Train Accuracy: 93.95%
+Epoch [115/200], Loss: 0.0123
+Train Accuracy: 95.16%
+Epoch [116/200], Loss: 0.0123
+Train Accuracy: 96.41%
+Epoch [117/200], Loss: 0.0123
+Train Accuracy: 97.90%
+Epoch [118/200], Loss: 0.0123
+Train Accuracy: 98.50%
+Epoch [119/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [120/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [121/200], Loss: 0.0123
+Train Accuracy: 97.64%
+checkpoint saved to ckpt_libero_goal_ckpt/state_120
+Epoch [122/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [123/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [124/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [125/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [126/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [127/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [128/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [129/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [130/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [131/200], Loss: 0.0123
+Train Accuracy: 97.64%
+checkpoint saved to ckpt_libero_goal_ckpt/state_130
+Epoch [132/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [133/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [134/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [135/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [136/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [137/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [138/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [139/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [140/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [141/200], Loss: 0.0123
+Train Accuracy: 97.64%
+checkpoint saved to ckpt_libero_goal_ckpt/state_140
+Epoch [142/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [143/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [144/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [145/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [146/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [147/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [148/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [149/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [150/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [151/200], Loss: 0.0123
+Train Accuracy: 97.64%
+checkpoint saved to ckpt_libero_goal_ckpt/state_150
+Epoch [152/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [153/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [154/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [155/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [156/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [157/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [158/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [159/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [160/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [161/200], Loss: 0.0123
+Train Accuracy: 97.63%
+checkpoint saved to ckpt_libero_goal_ckpt/state_160
+Epoch [162/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [163/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [164/200], Loss: 0.0123
+Train Accuracy: 97.62%
+Epoch [165/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [166/200], Loss: 0.0123
+Train Accuracy: 97.62%
+Epoch [167/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [168/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [169/200], Loss: 0.0123
+Train Accuracy: 97.61%
+Epoch [170/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [171/200], Loss: 0.0123
+Train Accuracy: 97.64%
+checkpoint saved to ckpt_libero_goal_ckpt/state_170
+Epoch [172/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [173/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [174/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [175/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [176/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [177/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [178/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [179/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [180/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [181/200], Loss: 0.0123
+Train Accuracy: 97.64%
+checkpoint saved to ckpt_libero_goal_ckpt/state_180
+Epoch [182/200], Loss: 0.0123
+Train Accuracy: 97.66%
+Epoch [183/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [184/200], Loss: 0.0123
+Train Accuracy: 97.62%
+Epoch [185/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [186/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [187/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [188/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [189/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [190/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [191/200], Loss: 0.0123
+Train Accuracy: 97.64%
+checkpoint saved to ckpt_libero_goal_ckpt/state_190
+Epoch [192/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [193/200], Loss: 0.0123
+Train Accuracy: 97.65%
+Epoch [194/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [195/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [196/200], Loss: 0.0123
+Train Accuracy: 97.63%
+Epoch [197/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [198/200], Loss: 0.0123
+Train Accuracy: 97.64%
+Epoch [199/200], Loss: 0.0123
+Train Accuracy: 97.62%
+Epoch [200/200], Loss: 0.0123
+Train Accuracy: 97.63%
+[2025-12-04 00:56:10,836] [INFO] [launch.py:367:main] Process 54941 exits successfully.
